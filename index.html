@@ -51,6 +51,17 @@
       const form = document.getElementById('calculator-form');
       const display = document.getElementById('display');
 
+       function setDisplayValue(value) {
+         display.value = value;
+         display.classList.remove('slide-in');
+         void display.offsetWidth;
+         display.classList.add('slide-in');
+      }
+
+      function appendToDisplay(value) {
+         setDisplayValue(display.value + value);
+      }
+
       form.addEventListener('click', (event) => {
          const target = event.target;
          if (target.tagName !== 'INPUT' || target.type !== 'button') return;
@@ -59,17 +70,17 @@
          const value = target.dataset.value;
 
          if (action === 'clear') {
-            display.value = '';
+            setDisplayValue('');
             return;
          }
 
          if (action === 'delete') {
-            display.value = display.value.slice(0, -1);
+            setDisplayValue(display.value.slice(0, -1));
             return;
          }
 
          if (action === 'sqrt') {
-            display.value += '√(';
+             appendToDisplay('√(');
             return;
          }
 
@@ -79,7 +90,7 @@
          }
 
          if (value) {
-            display.value += value;
+           appendToDisplay(value);
          }
       });
 
@@ -96,9 +107,9 @@
                throw new Error('Result is not finite');
             }
 
-            display.value = String(Number(result.toFixed(10)));
+           setDisplayValue(String(Number(result.toFixed(10))));
          } catch (error) {
-            display.value = `Error: ${error.message}`;
+            setDisplayValue(`Error: ${error.message}`);
          }
       }
 
