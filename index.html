@@ -8,52 +8,65 @@
 <body>
 
    <div class="container">
-   <div class="calculator">
-         <form id="calculator-form" onsubmit="return false;">
-            <div class="display">
-               <input type="text" name="display" id="display" readonly>
-            </div>
+   <div class="calculator-layout">
+         <div class="calculator">
+            <form id="calculator-form" onsubmit="return false;">
+               <div class="display">
+                  <input type="text" name="display" id="display" readonly>
+               </div>
 
-            <div>
-               <input type="button" value="AC" data-action="clear" class="operator">
-               <input type="button" value="DE" data-action="delete" class="operator">
-               <input type="button" value="%" data-value="%" class="operator">
-               <input type="button" value="/" data-value="/" class="operator">
-            </div>
-            <div>
-               <input type="button" value="7" data-value="7">
-               <input type="button" value="8" data-value="8">
-               <input type="button" value="9" data-value="9">
-               <input type="button" value="*" data-value="*" class="operator">
-            </div>
-            <div>
-               <input type="button" value="4" data-value="4">
-               <input type="button" value="5" data-value="5">
-               <input type="button" value="6" data-value="6">
-               <input type="button" value="-" data-value="-" class="operator">
-            </div>
-            <div>
-               <input type="button" value="1" data-value="1">
-               <input type="button" value="2" data-value="2">
-               <input type="button" value="3" data-value="3">
-               <input type="button" value="+" data-value="+" class="operator">
-            </div>
-            <div>
-               <input type="button" value="√" data-action="sqrt" class="operator">
-               <input type="button" value="0" data-value="0">
-               <input type="button" value="." data-value="." class="operator">
-               <input type="button" value="=" data-action="evaluate" class="operator">
-            </div>
-         </form>
+               <div>
+                  <input type="button" value="AC" data-action="clear" class="operator">
+                  <input type="button" value="DE" data-action="delete" class="operator">
+                  <input type="button" value="%" data-value="%" class="operator">
+                  <input type="button" value="/" data-value="/" class="operator">
+               </div>
+               <div>
+                  <input type="button" value="7" data-value="7">
+                  <input type="button" value="8" data-value="8">
+                  <input type="button" value="9" data-value="9">
+                  <input type="button" value="*" data-value="*" class="operator">
+               </div>
+               <div>
+                  <input type="button" value="4" data-value="4">
+                  <input type="button" value="5" data-value="5">
+                  <input type="button" value="6" data-value="6">
+                  <input type="button" value="-" data-value="-" class="operator">
+               </div>
+               <div>
+                  <input type="button" value="1" data-value="1">
+                  <input type="button" value="2" data-value="2">
+                  <input type="button" value="3" data-value="3">
+                  <input type="button" value="+" data-value="+" class="operator">
+               </div>
+               <div>
+                  <input type="button" value="√" data-action="sqrt" class="operator">
+                  <input type="button" value="0" data-value="0">
+                  <input type="button" value="." data-value="." class="operator">
+                  <input type="button" value="=" data-action="evaluate" class="operator">
+               </div>
+            </form>
+         </div>
+
+         <aside class="history-panel" aria-live="polite">
+            <h2>History</h2>
+            <ul id="history-list">
+               <li class="history-empty">No calculations yet</li>
+            </ul>
+         </aside>
       </div>
    </div>
    <script>
       const form = document.getElementById('calculator-form');
       const display = document.getElementById('display');
+      const historyList = document.getElementById('history-list');
+      const history = [];
 
-       function setDisplayValue(value) {
+        function setDisplayValue(value, animate = true) {
          display.value = value;
-         display.classList.remove('slide-in');
+         if (!animate) return;
+
+         display.classList.remove('slide-in', 'pulse-evaluate', 'shake-error');
          void display.offsetWidth;
          display.classList.add('slide-in');
       }
@@ -62,12 +75,39 @@
          setDisplayValue(display.value + value);
       }
 
-      form.addEventListener('click', (event) => {
-         const target = event.target;
-         if (target.tagName !== 'INPUT' || target.type !== 'button') return;
+        function addHistoryEntry(expression, result) {
+         history.unshift(`${expression} = ${result}`);
+         if (history.length > 5) {
+            history.length = 5;
+         }
+         renderHistory();
+      }
 
-         const action = target.dataset.action;
-         const value = target.dataset.value;
+        function renderHistory() {
+         historyList.innerHTML = '';
+
+         if (history.length === 0) {
+            const emptyItem = document.createElement('li');
+            emptyItem.className = 'history-empty';
+            emptyItem.textContent = 'No calculations yet';
+            historyList.appendChild(emptyItem);
+            return;
+         }
+
+            history.forEach((entry) => {
+            const item = document.createElement('li');
+            item.textContent = entry;
+            historyList.appendChild(item);
+         });
+      }
+
+      function triggerDisplayAnimation(className) {
+         display.classList.remove(className);
+         void display.offsetWidth;
+         display.classList.add(className);
+      }
+
+      function handleAction(action) {
 
          if (action === 'clear') {
             setDisplayValue('');
@@ -80,17 +120,64 @@
          }
 
          if (action === 'sqrt') {
-             appendToDisplay('√(');
+            appendToDisplay('√(');
             return;
          }
 
          if (action === 'evaluate') {
             evaluateExpression();
+              }
+      }
+
+      form.addEventListener('click', (event) => {
+         const target = event.target;
+         if (target.tagName !== 'INPUT' || target.type !== 'button') return;
+
+         const action = target.dataset.action;
+         const value = target.dataset.value;
+
+         if (action) {
+            handleAction(action);
             return;
          }
 
          if (value) {
            appendToDisplay(value);
+             }
+      });
+
+      document.addEventListener('keydown', (event) => {
+         const { key } = event;
+
+         if (/^[0-9]$/.test(key)) {
+            appendToDisplay(key);
+            return;
+         }
+
+         if (['+', '-', '*', '/', '.', '%', '(', ')'].includes(key)) {
+            appendToDisplay(key);
+            return;
+         }
+
+         if (key === 'Enter' || key === '=') {
+            event.preventDefault();
+            evaluateExpression();
+            return;
+         }
+
+         if (key === 'Backspace') {
+            event.preventDefault();
+            handleAction('delete');
+            return;
+         }
+
+         if (key === 'Escape') {
+            handleAction('clear');
+            return;
+         }
+
+         if (key.toLowerCase() === 'r') {
+            appendToDisplay('√(');
          }
       });
 
@@ -107,9 +194,13 @@
                throw new Error('Result is not finite');
             }
 
-           setDisplayValue(String(Number(result.toFixed(10))));
+           const normalizedResult = String(Number(result.toFixed(10)));
+            setDisplayValue(normalizedResult, false);
+            triggerDisplayAnimation('pulse-evaluate');
+            addHistoryEntry(expression, normalizedResult);
          } catch (error) {
-            setDisplayValue(`Error: ${error.message}`);
+             setDisplayValue(`Error: ${error.message}`, false);
+            triggerDisplayAnimation('shake-error');
          }
       }
 
