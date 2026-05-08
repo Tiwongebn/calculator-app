@@ -16,7 +16,8 @@
 
 body {
     min-height: 100vh;
-    overflow: hidden;
+    overflow-y: scroll;
+    overflow-x: hidden;
     background: #071325;
 }
 
@@ -186,7 +187,7 @@ history-panel {
 }
 
 .history-panel h2 {
-    font-size: 1.1rem;
+    font-size: 0.90rem;
     margin-bottom: 12px;
     color: var(--text-subtle);
 }
@@ -213,9 +214,6 @@ history-panel {
 }
 
 @media (max-width: 860px) {
-    body {
-        overflow: auto;
-    }
 
     .calculator-layout {
         flex-direction: column;
