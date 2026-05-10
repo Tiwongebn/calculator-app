@@ -66,7 +66,12 @@
         width: 100%;
     }
 
-    .calculator,
+     .calculator {
+        width: fit-content;
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
     .history-panel {
         width: min(100%, 480px);
     }
@@ -89,7 +94,9 @@
     }
 
     .calculator {
-        width: 100%;
+        width: fit-content;
+        max-width: 100%;
+        margin: 0 auto;
         padding: 14px;
     }
 
