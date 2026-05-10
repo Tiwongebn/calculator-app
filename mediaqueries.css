@@ -68,13 +68,20 @@
 
     .calculator,
     .history-panel {
-        width: min(100%, 360px);
+        width: min(100%, 480px);
     }
 
-    .history-panel {
-        padding: 18px;
+    .calculator form input {
+        width: 56px;
+        height: 56px;
+        margin: 8px;
+    }
+
+    .history-panel { 
+        padding: 18px; 
     }
 }
+
 
 @media (max-width: 520px) {
     .container {
@@ -87,13 +94,13 @@
     }
 
     .calculator form input {
-        width: calc((100vw - 72px) / 4);
+        width: calc((100vw - 80px) / 4);
         max-width: 56px;
         min-width: 48px;
-        height: calc((100vw - 72px) / 4);
+        height: calc((100vw - 80px) / 4);
         max-height: 56px;
-        min-height: 48px;
-        margin: 5px;
+        min-height: 44px;
+        margin: 6px;
         border-radius: 12px;
         font-size: 18px;
     }

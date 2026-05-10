@@ -178,7 +178,7 @@ form input.operator{
     font-weight: 600;
 }
 
-history-panel {
+.history-panel {
     width: 250px;
     padding: 20px;
     color: var(--text-main);
