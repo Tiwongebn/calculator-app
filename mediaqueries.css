@@ -72,6 +72,11 @@
         margin: 0 auto;
     }
 
+    form .display {
+        /* Maintain the alignment with buttons */
+        margin: 15px 8px; 
+    }
+
     .history-panel {
         width: min(100%, 480px);
     }
@@ -94,8 +99,8 @@
     }
 
     .calculator {
-        width: fit-content;
-        max-width: 520px;
+        width: 100%;
+        max-width: 360px;
         margin: 0 auto;
         padding: 14px;
     }
@@ -113,10 +118,11 @@
     }
 
     form .display {
-        margin: 12px 0;
+        margin: 12px 6px;
     }
 
      form .display .display-input {
+        width: 100%;
         font-size: 34px;
         padding: 10px 12px;
     }
