@@ -137,3 +137,10 @@
         padding: 9px 10px;
     }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .container::before,
+    .container::after {
+        animation: none; /* Stops the movement but keeps the static beauty */
+    }
+}

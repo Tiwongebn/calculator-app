@@ -44,11 +44,12 @@ body {
                 radial-gradient(circle at 80% 30%, #8b5cf6 0%, transparent 38%),
                 radial-gradient(circle at 60% 80%, #36f3a1 0%, transparent 40%);
     animation: auroraShift 16s ease-in-out infinite alternate;
+    will-change: transform;
 }
 
 .container::after {
     z-index: -1;
-    filter: blur(110px);
+    filter: blur(60px);
     opacity: 0.6;
     animation-duration: 24s;
     animation-direction: alternate-reverse;
