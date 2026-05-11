@@ -43,29 +43,16 @@ body {
     background: radial-gradient(circle at 20% 20%, #4fd1ff 0%, transparent 40%),
                 radial-gradient(circle at 80% 30%, #8b5cf6 0%, transparent 38%),
                 radial-gradient(circle at 60% 80%, #36f3a1 0%, transparent 40%);
-    animation: auroraShift 16s ease-in-out infinite alternate;
-    will-change: transform;
+     transform: translate3d(0, 0, 0) scale(1.02);
 }
 
 .container::after {
     z-index: -1;
     filter: blur(60px);
     opacity: 0.6;
-    animation-duration: 24s;
-    animation-direction: alternate-reverse;
+    transform: translate3d(2%, -1%, 0) scale(1.04);
 }
 
-@keyframes auroraShift {
-    0% {
-        transform: translate3d(-3%, -2%, 0) scale(1);
-    }
-    50% {
-        transform: translate3d(5%, 3%, 0) scale(1.1);
-    }
-    100% {
-        transform: translate3d(-2%, 6%, 0) scale(0.98);
-    }
-}
 .calculator-layout {
     display: flex;
     gap: 20px;
