@@ -11,14 +11,14 @@
         padding: 30px;
     }
 
-    .calculator form input {
+    .calculator form .calc-button {
         width: 68px;
         height: 68px;
         margin: 11px;
         font-size: 22px;
     }
 
-    form .display input {
+     form .display .display-input {
         font-size: 50px;
     }
 
@@ -40,13 +40,13 @@
         padding: 20px;
     }
 
-    .calculator form input {
+     .calculator form .calc-button {
         width: 56px;
         height: 56px;
         margin: 8px;
     }
 
-    form .display input {
+     form .display .display-input {
         font-size: 40px;
     }
 
@@ -76,7 +76,7 @@
         width: min(100%, 480px);
     }
 
-    .calculator form input {
+     .calculator form .calc-button {
         width: 56px;
         height: 56px;
         margin: 8px;
@@ -100,7 +100,7 @@
         padding: 14px;
     }
 
-    .calculator form input {
+     .calculator form .calc-button {
         width: calc((100vw - 80px) / 4);
         max-width: 56px;
         min-width: 48px;
@@ -116,7 +116,7 @@
         margin: 12px 0;
     }
 
-    form .display input {
+     form .display .display-input {
         font-size: 34px;
         padding: 10px 12px;
     }

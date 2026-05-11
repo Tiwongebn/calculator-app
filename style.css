@@ -86,11 +86,14 @@ body {
 }
 
 .calculator form {
-    width: fit-content;
+    display: inline-block; 
+    text-align: center;
+    width: 100%;
+    max-width: 340px;
     margin: 0 auto;
 }
 
-.calculator form input{
+.calculator form .calc-button{
     border: 0;
     outline: 0;
     width: 60px;
@@ -105,12 +108,12 @@ body {
     transition: transform 140ms ease, background-color 140ms ease, box-shadow 140ms ease;
 }
 
-.calculator form input:hover{
+.calculator form .calc-button:hover{
     box-shadow: 0 10px 18px rgba(0, 0, 0, 0.32);
     background: rgba(255, 255, 255, 0.12);
 }
  
-.calculator form input:active{
+.calculator form .calc-button:active{
     transform: scale(0.92);
     background: var(--btn-bg-press);
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
@@ -119,11 +122,14 @@ body {
 form .display{
     display: flex;
     justify-content: flex-end;
-    margin: 20px 0;
+    margin: 20px 10px;
     overflow: hidden;
 }
 
-form .display input{
+form .display .display-input{
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
     text-align: right;
     flex: 1;
     font-size: 45px;
@@ -134,15 +140,15 @@ form .display input{
     color: var(--text-main);
 }
 
-form .display input.slide-in {
+form .display .display-input.slide-in {
     animation: valueSlide 220ms ease;
 }
 
-form .display input.pulse-evaluate {
+form .display .display-input.pulse-evaluate {
     animation: evaluatePulse 280ms ease;
 }
 
-form .display input.shake-error {
+form .display .display-input.shake-error {
     animation: errorShake 220ms ease;
 }
 
@@ -178,7 +184,7 @@ form .display input.shake-error {
     75% { transform: translateX(6px); }
 }
 
-form input.operator{
+form .calc-button.operator{
     color: var(--text-subtle);
     font-weight: 600;
 }
