@@ -12,6 +12,7 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
 
 const form = document.getElementById('calculator-form');
 const display = document.getElementById('display');
+const displayPreview = document.getElementById('display-preview');
 const announcer = document.getElementById('announcer');
 const historyList = document.getElementById('history-list');
 const historyClear = document.getElementById('history-clear');
@@ -466,6 +467,7 @@ function showWorkMessage(message) {
 
 function renderWork(expression, { final = false, mode = angleMode } = {}) {
    workSteps.replaceChildren();
+   displayPreview.textContent = '';
    // Steps slide in one after another for a final answer, but not on every keystroke.
    workSteps.classList.toggle('animate-steps', final);
 
@@ -521,6 +523,11 @@ function renderWork(expression, { final = false, mode = angleMode } = {}) {
    if (solution.steps.length === 0) {
       showWorkMessage('Nothing to simplify yet.');
       return;
+   }
+
+   // A quiet live answer under the display while typing.
+   if (!final) {
+      displayPreview.textContent = `= ${formatNumber(solution.result)}`;
    }
 
    addWorkRow('work-answer', (item) => {

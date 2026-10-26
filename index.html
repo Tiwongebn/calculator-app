@@ -7,7 +7,7 @@
    <meta name="description" content="A scientific calculator that explains every step of its answer, graphs functions and converts units and currencies, powered by a hand-written expression parser instead of eval().">
    <link rel="preconnect" href="https://fonts.googleapis.com">
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap">
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap">
    <script>
       // Apply the saved (or system) theme before the page paints to avoid a flash.
       (function () {
@@ -58,6 +58,7 @@
                   <div class="display">
                      <label for="display" class="visually-hidden">Expression</label>
                      <input type="text" name="display" id="display" class="display-input" readonly>
+                     <output id="display-preview" class="display-preview" for="display" aria-hidden="true"></output>
                   </div>
 
                   <div id="scientific-panel" class="scientific-panel" role="group" aria-label="Scientific functions">
@@ -83,41 +84,43 @@
                      </div>
                   </div>
 
-                  <div>
-                     <input type="button" class="calc-button operator" value="AC" data-action="clear" aria-label="Clear all">
-                     <input type="button" class="calc-button operator" value="DE" data-action="delete" aria-label="Delete last character">
-                     <input type="button" class="calc-button operator" value="(" data-value="(" aria-label="Open parenthesis">
-                     <input type="button" class="calc-button operator" value=")" data-value=")" aria-label="Close parenthesis">
-                  </div>
-                  <div>
-                     <input type="button" class="calc-button operator" value="√" data-action="sqrt" aria-label="Square root">
-                     <input type="button" class="calc-button operator" value="^" data-value="^" aria-label="Power">
-                     <input type="button" class="calc-button operator" value="%" data-value="%" aria-label="Percent">
-                     <input type="button" class="calc-button operator" value="÷" data-value="/" aria-label="Divide">
-                  </div>
-                  <div>
-                     <input type="button" class="calc-button" value="7" data-value="7">
-                     <input type="button" class="calc-button" value="8" data-value="8">
-                     <input type="button" class="calc-button" value="9" data-value="9">
-                     <input type="button" class="calc-button operator" value="×" data-value="*" aria-label="Multiply">
-                  </div>
-                  <div>
-                     <input type="button" class="calc-button" value="4" data-value="4">
-                     <input type="button" class="calc-button" value="5" data-value="5">
-                     <input type="button" class="calc-button" value="6" data-value="6">
-                     <input type="button" class="calc-button operator" value="−" data-value="-" aria-label="Subtract">
-                  </div>
-                  <div>
-                     <input type="button" class="calc-button" value="1" data-value="1">
-                     <input type="button" class="calc-button" value="2" data-value="2">
-                     <input type="button" class="calc-button" value="3" data-value="3">
-                     <input type="button" class="calc-button operator" value="+" data-value="+" aria-label="Add">
-                  </div>
-                  <div>
-                     <input type="button" class="calc-button operator" value="π" data-value="π" aria-label="Pi">
-                     <input type="button" class="calc-button" value="0" data-value="0">
-                     <input type="button" class="calc-button operator" value="." data-value="." aria-label="Decimal point">
-                     <input type="button" class="calc-button equals" value="=" data-action="evaluate" aria-label="Equals">
+                  <div class="keypad">
+                     <div>
+                        <input type="button" class="calc-button operator" value="AC" data-action="clear" aria-label="Clear all">
+                        <input type="button" class="calc-button operator" value="DE" data-action="delete" aria-label="Delete last character">
+                        <input type="button" class="calc-button operator" value="(" data-value="(" aria-label="Open parenthesis">
+                        <input type="button" class="calc-button operator" value=")" data-value=")" aria-label="Close parenthesis">
+                     </div>
+                     <div>
+                        <input type="button" class="calc-button operator" value="√" data-action="sqrt" aria-label="Square root">
+                        <input type="button" class="calc-button operator" value="^" data-value="^" aria-label="Power">
+                        <input type="button" class="calc-button operator" value="%" data-value="%" aria-label="Percent">
+                        <input type="button" class="calc-button operator" value="÷" data-value="/" aria-label="Divide">
+                     </div>
+                     <div>
+                        <input type="button" class="calc-button" value="7" data-value="7">
+                        <input type="button" class="calc-button" value="8" data-value="8">
+                        <input type="button" class="calc-button" value="9" data-value="9">
+                        <input type="button" class="calc-button operator" value="×" data-value="*" aria-label="Multiply">
+                     </div>
+                     <div>
+                        <input type="button" class="calc-button" value="4" data-value="4">
+                        <input type="button" class="calc-button" value="5" data-value="5">
+                        <input type="button" class="calc-button" value="6" data-value="6">
+                        <input type="button" class="calc-button operator" value="−" data-value="-" aria-label="Subtract">
+                     </div>
+                     <div>
+                        <input type="button" class="calc-button" value="1" data-value="1">
+                        <input type="button" class="calc-button" value="2" data-value="2">
+                        <input type="button" class="calc-button" value="3" data-value="3">
+                        <input type="button" class="calc-button operator" value="+" data-value="+" aria-label="Add">
+                     </div>
+                     <div>
+                        <input type="button" class="calc-button operator" value="π" data-value="π" aria-label="Pi">
+                        <input type="button" class="calc-button" value="0" data-value="0">
+                        <input type="button" class="calc-button operator" value="." data-value="." aria-label="Decimal point">
+                        <input type="button" class="calc-button equals" value="=" data-action="evaluate" aria-label="Equals">
+                     </div>
                   </div>
                </form>
             </div>
