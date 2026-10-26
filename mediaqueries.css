@@ -25,6 +25,14 @@
     .side-panels {
         width: 320px;
     }
+
+    .calculator form {
+        max-width: 384px;
+    }
+
+    .view {
+        width: 384px;
+    }
 }
 
 @media (max-width: 1024px) {
@@ -143,7 +151,16 @@
 
 @media (prefers-reduced-motion: reduce) {
     .container::before,
-    .container::after {
+    .container::after,
+    .view,
+    .calculator form .calc-button.pressed,
+    .work-steps.animate-steps .work-step,
+    .work-steps.animate-steps .work-answer,
+    .convert-result.result-pop {
         animation: none; /* Stops the movement but keeps the static beauty */
+    }
+
+    .scientific-panel {
+        transition: none;
     }
 }

@@ -4,7 +4,7 @@
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Show Your Work Calculator</title>
-   <meta name="description" content="A calculator that explains every step of its answer, powered by a hand-written expression parser instead of eval().">
+   <meta name="description" content="A scientific calculator that explains every step of its answer, graphs functions and converts units and currencies, powered by a hand-written expression parser instead of eval().">
    <link rel="preconnect" href="https://fonts.googleapis.com">
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap">
@@ -24,15 +24,17 @@
    <link rel="stylesheet" href="style.css">
    <link rel="stylesheet" href="mediaqueries.css">
 </head>
-<body>
+<body data-view="calc">
 
    <div class="container">
       <main class="calculator-layout">
          <section class="calculator" aria-label="Calculator">
             <div class="toolbar">
-               <button type="button" id="work-toggle" class="toolbar-button" aria-pressed="true" aria-controls="work-panel">
-                  Show work
-               </button>
+               <div class="mode-tabs" role="tablist" aria-label="Mode">
+                  <button type="button" role="tab" id="tab-calc" class="mode-tab" data-view="calc" aria-controls="view-calc" aria-selected="true">Calculate</button>
+                  <button type="button" role="tab" id="tab-graph" class="mode-tab" data-view="graph" aria-controls="view-graph" aria-selected="false" tabindex="-1">Graph</button>
+                  <button type="button" role="tab" id="tab-convert" class="mode-tab" data-view="convert" aria-controls="view-convert" aria-selected="false" tabindex="-1">Convert</button>
+               </div>
                <button type="button" id="theme-toggle" class="toolbar-button icon-button" aria-label="Switch to light theme">
                   <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                      <circle cx="12" cy="12" r="4.5"></circle>
@@ -44,54 +46,138 @@
                </button>
             </div>
 
-            <form id="calculator-form" onsubmit="return false;">
-               <div class="display">
-                  <label for="display" class="visually-hidden">Expression</label>
-                  <input type="text" name="display" id="display" class="display-input" readonly>
+            <!-- Calculator -->
+            <div id="view-calc" class="view" role="tabpanel" aria-labelledby="tab-calc">
+               <div class="view-options">
+                  <button type="button" id="work-toggle" class="chip" aria-pressed="true" aria-controls="work-panel">Show work</button>
+                  <button type="button" id="scientific-toggle" class="chip" aria-pressed="false" aria-controls="scientific-panel">Scientific</button>
+                  <button type="button" id="angle-toggle" class="chip angle-chip">DEG</button>
                </div>
 
-               <div>
-                  <input type="button" class="calc-button operator" value="AC" data-action="clear" aria-label="Clear all">
-                  <input type="button" class="calc-button operator" value="DE" data-action="delete" aria-label="Delete last character">
-                  <input type="button" class="calc-button operator" value="(" data-value="(" aria-label="Open parenthesis">
-                  <input type="button" class="calc-button operator" value=")" data-value=")" aria-label="Close parenthesis">
+               <form id="calculator-form" onsubmit="return false;">
+                  <div class="display">
+                     <label for="display" class="visually-hidden">Expression</label>
+                     <input type="text" name="display" id="display" class="display-input" readonly>
+                  </div>
+
+                  <div id="scientific-panel" class="scientific-panel" role="group" aria-label="Scientific functions">
+                     <div class="scientific-inner">
+                        <div>
+                           <input type="button" class="calc-button sci" value="sin" data-value="sin(" aria-label="Sine">
+                           <input type="button" class="calc-button sci" value="cos" data-value="cos(" aria-label="Cosine">
+                           <input type="button" class="calc-button sci" value="tan" data-value="tan(" aria-label="Tangent">
+                           <input type="button" class="calc-button sci" value="ln" data-value="ln(" aria-label="Natural logarithm">
+                        </div>
+                        <div>
+                           <input type="button" class="calc-button sci" value="sin⁻¹" data-value="asin(" aria-label="Inverse sine">
+                           <input type="button" class="calc-button sci" value="cos⁻¹" data-value="acos(" aria-label="Inverse cosine">
+                           <input type="button" class="calc-button sci" value="tan⁻¹" data-value="atan(" aria-label="Inverse tangent">
+                           <input type="button" class="calc-button sci" value="log" data-value="log(" aria-label="Logarithm base 10">
+                        </div>
+                        <div>
+                           <input type="button" class="calc-button sci" value="x²" data-value="^2" aria-label="Square">
+                           <input type="button" class="calc-button sci" value="x⁻¹" data-value="^(-1)" aria-label="Reciprocal">
+                           <input type="button" class="calc-button sci" value="x!" data-value="!" aria-label="Factorial">
+                           <input type="button" class="calc-button sci" value="e" data-value="e" aria-label="Euler's number">
+                        </div>
+                     </div>
+                  </div>
+
+                  <div>
+                     <input type="button" class="calc-button operator" value="AC" data-action="clear" aria-label="Clear all">
+                     <input type="button" class="calc-button operator" value="DE" data-action="delete" aria-label="Delete last character">
+                     <input type="button" class="calc-button operator" value="(" data-value="(" aria-label="Open parenthesis">
+                     <input type="button" class="calc-button operator" value=")" data-value=")" aria-label="Close parenthesis">
+                  </div>
+                  <div>
+                     <input type="button" class="calc-button operator" value="√" data-action="sqrt" aria-label="Square root">
+                     <input type="button" class="calc-button operator" value="^" data-value="^" aria-label="Power">
+                     <input type="button" class="calc-button operator" value="%" data-value="%" aria-label="Percent">
+                     <input type="button" class="calc-button operator" value="÷" data-value="/" aria-label="Divide">
+                  </div>
+                  <div>
+                     <input type="button" class="calc-button" value="7" data-value="7">
+                     <input type="button" class="calc-button" value="8" data-value="8">
+                     <input type="button" class="calc-button" value="9" data-value="9">
+                     <input type="button" class="calc-button operator" value="×" data-value="*" aria-label="Multiply">
+                  </div>
+                  <div>
+                     <input type="button" class="calc-button" value="4" data-value="4">
+                     <input type="button" class="calc-button" value="5" data-value="5">
+                     <input type="button" class="calc-button" value="6" data-value="6">
+                     <input type="button" class="calc-button operator" value="−" data-value="-" aria-label="Subtract">
+                  </div>
+                  <div>
+                     <input type="button" class="calc-button" value="1" data-value="1">
+                     <input type="button" class="calc-button" value="2" data-value="2">
+                     <input type="button" class="calc-button" value="3" data-value="3">
+                     <input type="button" class="calc-button operator" value="+" data-value="+" aria-label="Add">
+                  </div>
+                  <div>
+                     <input type="button" class="calc-button operator" value="π" data-value="π" aria-label="Pi">
+                     <input type="button" class="calc-button" value="0" data-value="0">
+                     <input type="button" class="calc-button operator" value="." data-value="." aria-label="Decimal point">
+                     <input type="button" class="calc-button equals" value="=" data-action="evaluate" aria-label="Equals">
+                  </div>
+               </form>
+            </div>
+
+            <!-- Graph -->
+            <div id="view-graph" class="view graph-view" role="tabpanel" aria-labelledby="tab-graph" hidden>
+               <div class="graph-input-row">
+                  <label for="graph-input" class="graph-label">y =</label>
+                  <input type="text" id="graph-input" class="text-input graph-input" value="sin(x) * x" spellcheck="false" autocomplete="off" autocapitalize="off">
                </div>
-               <div>
-                  <input type="button" class="calc-button operator" value="√" data-action="sqrt" aria-label="Square root">
-                  <input type="button" class="calc-button operator" value="^" data-value="^" aria-label="Power">
-                  <input type="button" class="calc-button operator" value="%" data-value="%" aria-label="Percent">
-                  <input type="button" class="calc-button operator" value="÷" data-value="/" aria-label="Divide">
+               <div class="graph-inserts" aria-label="Insert into function">
+                  <button type="button" class="chip" data-graph-insert="x">x</button>
+                  <button type="button" class="chip" data-graph-insert="^2" aria-label="Square">x²</button>
+                  <button type="button" class="chip" data-graph-insert="sin(" aria-label="Sine">sin</button>
+                  <button type="button" class="chip" data-graph-insert="cos(" aria-label="Cosine">cos</button>
+                  <button type="button" class="chip" data-graph-insert="tan(" aria-label="Tangent">tan</button>
+                  <button type="button" class="chip" data-graph-insert="√(" aria-label="Square root">√</button>
+                  <button type="button" class="chip" data-graph-insert="ln(" aria-label="Natural logarithm">ln</button>
+                  <button type="button" class="chip" data-graph-insert="π" aria-label="Pi">π</button>
                </div>
-               <div>
-                  <input type="button" class="calc-button" value="7" data-value="7">
-                  <input type="button" class="calc-button" value="8" data-value="8">
-                  <input type="button" class="calc-button" value="9" data-value="9">
-                  <input type="button" class="calc-button operator" value="×" data-value="*" aria-label="Multiply">
+               <div class="graph-canvas-wrap">
+                  <canvas id="graph-canvas" class="graph-canvas" role="img" aria-label="Graph"></canvas>
+                  <div id="graph-readout" class="graph-readout" hidden></div>
+                  <div class="graph-controls">
+                     <button type="button" id="graph-zoom-in" class="toolbar-button icon-button" aria-label="Zoom in">+</button>
+                     <button type="button" id="graph-zoom-out" class="toolbar-button icon-button" aria-label="Zoom out">−</button>
+                     <button type="button" id="graph-reset" class="toolbar-button icon-button" aria-label="Reset view">⟲</button>
+                  </div>
                </div>
-               <div>
-                  <input type="button" class="calc-button" value="4" data-value="4">
-                  <input type="button" class="calc-button" value="5" data-value="5">
-                  <input type="button" class="calc-button" value="6" data-value="6">
-                  <input type="button" class="calc-button operator" value="−" data-value="-" aria-label="Subtract">
+               <p id="graph-status" class="view-status" aria-live="polite"></p>
+            </div>
+
+            <!-- Converter -->
+            <div id="view-convert" class="view convert-view" role="tabpanel" aria-labelledby="tab-convert" hidden>
+               <div id="convert-categories" class="convert-categories" role="group" aria-label="What to convert"></div>
+
+               <label for="convert-amount" class="field-label">Amount</label>
+               <input type="text" id="convert-amount" class="text-input convert-amount" value="1" inputmode="decimal" spellcheck="false" autocomplete="off">
+
+               <div class="convert-units">
+                  <div class="convert-unit">
+                     <label for="convert-from" class="field-label">From</label>
+                     <select id="convert-from" class="select-input"></select>
+                  </div>
+                  <button type="button" id="convert-swap" class="toolbar-button icon-button convert-swap" aria-label="Swap units">⇄</button>
+                  <div class="convert-unit">
+                     <label for="convert-to" class="field-label">To</label>
+                     <select id="convert-to" class="select-input"></select>
+                  </div>
                </div>
-               <div>
-                  <input type="button" class="calc-button" value="1" data-value="1">
-                  <input type="button" class="calc-button" value="2" data-value="2">
-                  <input type="button" class="calc-button" value="3" data-value="3">
-                  <input type="button" class="calc-button operator" value="+" data-value="+" aria-label="Add">
-               </div>
-               <div>
-                  <input type="button" class="calc-button operator" value="π" data-value="π" aria-label="Pi">
-                  <input type="button" class="calc-button" value="0" data-value="0">
-                  <input type="button" class="calc-button operator" value="." data-value="." aria-label="Decimal point">
-                  <input type="button" class="calc-button equals" value="=" data-action="evaluate" aria-label="Equals">
-               </div>
-            </form>
+
+               <output id="convert-result" class="convert-result" for="convert-amount convert-from convert-to" aria-live="polite">—</output>
+               <p id="convert-rate" class="convert-rate"></p>
+               <p id="convert-status" class="view-status" hidden></p>
+            </div>
 
             <div id="announcer" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
          </section>
 
-         <div class="side-panels">
+         <div id="side-panels" class="side-panels">
             <section class="panel work-panel" id="work-panel" aria-labelledby="work-heading">
                <h2 id="work-heading">Show your work</h2>
                <ol id="work-steps" class="work-steps"></ol>
@@ -108,758 +194,9 @@
       </main>
    </div>
 
-   <script>
-      const STORAGE_KEYS = {
-         theme: 'calc-theme',
-         showWork: 'calc-show-work',
-         history: 'calc-history'
-      };
-      const HISTORY_LIMIT = 8;
-      const OPERATOR_SYMBOLS = { '+': '+', '-': '−', '*': '×', '/': '÷', '^': '^' };
-      const MARK_START = '\u0001';
-      const MARK_END = '\u0002';
-
-      const form = document.getElementById('calculator-form');
-      const display = document.getElementById('display');
-      const announcer = document.getElementById('announcer');
-      const historyList = document.getElementById('history-list');
-      const historyClear = document.getElementById('history-clear');
-      const workPanel = document.getElementById('work-panel');
-      const workSteps = document.getElementById('work-steps');
-      const workToggle = document.getElementById('work-toggle');
-      const themeToggle = document.getElementById('theme-toggle');
-
-      let history = loadHistory();
-      // True while the display shows an error message, so the next key starts fresh.
-      let displayIsError = false;
-      // True right after "=", so typing a number starts a new calculation.
-      let justEvaluated = false;
-
-      function readStorage(key) {
-         try {
-            return localStorage.getItem(key);
-         } catch (error) {
-            return null;
-         }
-      }
-
-      function writeStorage(key, value) {
-         try {
-            localStorage.setItem(key, value);
-         } catch (error) {}
-      }
-
-      function announce(message) {
-         announcer.textContent = message;
-      }
-
-      function formatNumber(value) {
-         return String(Number(value.toPrecision(12)));
-      }
-
-      function setDisplayValue(value, animate = true) {
-         display.value = value;
-         display.scrollLeft = display.scrollWidth;
-         if (!animate) return;
-
-         display.classList.remove('slide-in', 'pulse-evaluate', 'shake-error');
-         void display.offsetWidth;
-         display.classList.add('slide-in');
-      }
-
-      function appendToDisplay(value) {
-         const startsNewValue = /^[\d.π√(]/.test(value);
-         if (displayIsError || (justEvaluated && startsNewValue)) {
-            display.value = '';
-         }
-         displayIsError = false;
-         justEvaluated = false;
-
-         setDisplayValue(display.value + value);
-         renderWork(display.value);
-      }
-
-      function clearDisplay() {
-         displayIsError = false;
-         justEvaluated = false;
-         setDisplayValue('');
-         renderWork('');
-      }
-
-      function deleteLastCharacter() {
-         if (displayIsError) {
-            clearDisplay();
-            return;
-         }
-         justEvaluated = false;
-         setDisplayValue(display.value.slice(0, -1));
-         renderWork(display.value);
-      }
-
-      // ---------- History ----------
-
-      function loadHistory() {
-         try {
-            const saved = JSON.parse(readStorage(STORAGE_KEYS.history));
-            if (Array.isArray(saved)) {
-               return saved
-                  .filter((entry) => entry && typeof entry.expression === 'string' && typeof entry.result === 'string')
-                  .slice(0, HISTORY_LIMIT);
-            }
-         } catch (error) {}
-         return [];
-      }
-
-      function addHistoryEntry(expression, result) {
-         history.unshift({ expression, result });
-         if (history.length > HISTORY_LIMIT) {
-            history.length = HISTORY_LIMIT;
-         }
-         writeStorage(STORAGE_KEYS.history, JSON.stringify(history));
-         renderHistory();
-      }
-
-      function renderHistory() {
-         historyList.replaceChildren();
-         historyClear.hidden = history.length === 0;
-
-         if (history.length === 0) {
-            const emptyItem = document.createElement('li');
-            emptyItem.className = 'history-empty';
-            emptyItem.textContent = 'No calculations yet';
-            historyList.appendChild(emptyItem);
-            return;
-         }
-
-         history.forEach((entry) => {
-            const item = document.createElement('li');
-            const button = document.createElement('button');
-            button.type = 'button';
-            button.className = 'history-item';
-            button.setAttribute('aria-label', `Use result ${entry.result} from ${entry.expression}`);
-
-            const expression = document.createElement('span');
-            expression.className = 'history-expression';
-            expression.textContent = entry.expression;
-
-            const result = document.createElement('span');
-            result.className = 'history-result';
-            result.textContent = `= ${entry.result}`;
-
-            button.append(expression, result);
-            button.addEventListener('click', () => {
-               displayIsError = false;
-               justEvaluated = true;
-               setDisplayValue(entry.result);
-               renderWork(entry.expression, { final: true });
-               announce(`Loaded ${entry.result}`);
-            });
-
-            item.appendChild(button);
-            historyList.appendChild(item);
-         });
-      }
-
-      historyClear.addEventListener('click', () => {
-         history = [];
-         writeStorage(STORAGE_KEYS.history, JSON.stringify(history));
-         renderHistory();
-         announce('History cleared');
-      });
-
-      // ---------- Theme and show-work toggles ----------
-
-      function applyTheme(theme) {
-         document.documentElement.dataset.theme = theme;
-         const next = theme === 'dark' ? 'light' : 'dark';
-         themeToggle.setAttribute('aria-label', `Switch to ${next} theme`);
-         themeToggle.title = `Switch to ${next} theme`;
-      }
-
-      themeToggle.addEventListener('click', () => {
-         const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-         applyTheme(theme);
-         writeStorage(STORAGE_KEYS.theme, theme);
-      });
-
-      function applyShowWork(enabled) {
-         workPanel.hidden = !enabled;
-         workToggle.setAttribute('aria-pressed', String(enabled));
-      }
-
-      workToggle.addEventListener('click', () => {
-         const enabled = workPanel.hidden;
-         applyShowWork(enabled);
-         writeStorage(STORAGE_KEYS.showWork, String(enabled));
-      });
-
-      // ---------- Input ----------
-
-      function handleAction(action) {
-         if (action === 'clear') {
-            clearDisplay();
-            return;
-         }
-
-         if (action === 'delete') {
-            deleteLastCharacter();
-            return;
-         }
-
-         if (action === 'sqrt') {
-            appendToDisplay('√(');
-            return;
-         }
-
-         if (action === 'evaluate') {
-            evaluateExpression();
-         }
-      }
-
-      // Keep mouse clicks from focusing keypad buttons, so Enter always means "=".
-      form.addEventListener('mousedown', (event) => {
-         if (event.target.classList.contains('calc-button')) {
-            event.preventDefault();
-         }
-      });
-
-      form.addEventListener('click', (event) => {
-         const target = event.target;
-         if (target.tagName !== 'INPUT' || target.type !== 'button') return;
-
-         const action = target.dataset.action;
-         const value = target.dataset.value;
-
-         if (action) {
-            handleAction(action);
-            return;
-         }
-
-         if (value) {
-            appendToDisplay(value);
-         }
-      });
-
-      document.addEventListener('keydown', (event) => {
-         const { key } = event;
-
-         if (event.ctrlKey || event.metaKey || event.altKey) return;
-
-         // Let Enter and Space activate whichever button has keyboard focus.
-         const focusedButton = event.target.closest && event.target.closest('button, input[type="button"]');
-         if (focusedButton && (key === 'Enter' || key === ' ')) return;
-
-         if (/^[0-9]$/.test(key)) {
-            appendToDisplay(key);
-            return;
-         }
-
-         if (['+', '-', '*', '/', '.', '%', '(', ')', '^'].includes(key)) {
-            event.preventDefault();
-            appendToDisplay(key);
-            return;
-         }
-
-         if (key === 'Enter' || key === '=') {
-            event.preventDefault();
-            evaluateExpression();
-            return;
-         }
-
-         if (key === 'Backspace') {
-            event.preventDefault();
-            deleteLastCharacter();
-            return;
-         }
-
-         if (key === 'Escape') {
-            clearDisplay();
-            return;
-         }
-
-         if (key.toLowerCase() === 'r') {
-            appendToDisplay('√(');
-            return;
-         }
-
-         if (key.toLowerCase() === 'p') {
-            appendToDisplay('π');
-         }
-      });
-
-      function triggerDisplayAnimation(className) {
-         display.classList.remove(className);
-         void display.offsetWidth;
-         display.classList.add(className);
-      }
-
-      function evaluateExpression() {
-         if (displayIsError) return;
-
-         const expression = display.value.trim();
-
-         try {
-            if (!expression) {
-               throw new Error('Enter an expression');
-            }
-
-            const solution = solve(expression);
-            if (solution.error) {
-               throw solution.error;
-            }
-
-            const result = formatNumber(solution.result);
-            setDisplayValue(result, false);
-            triggerDisplayAnimation('pulse-evaluate');
-            announce(`Equals ${result}`);
-
-            if (expression !== result) {
-               addHistoryEntry(expression, result);
-               renderWork(expression, { final: true });
-            }
-            justEvaluated = true;
-         } catch (error) {
-            setDisplayValue(`Error: ${error.message}`, false);
-            triggerDisplayAnimation('shake-error');
-            announce(`Error: ${error.message}`);
-            renderWork(expression, { final: true });
-            displayIsError = true;
-         }
-      }
-
-      // ---------- Parsing ----------
-      // The parser builds a syntax tree instead of computing the answer directly,
-      // so the same tree can be reduced one operation at a time to show each step.
-
-      class ExpressionParser {
-         constructor(input) {
-            this.tokens = this.tokenize(input);
-            this.position = 0;
-         }
-
-         tokenize(input) {
-            const tokens = [];
-            const normalized = input.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-');
-            let i = 0;
-
-            while (i < normalized.length) {
-               const char = normalized[i];
-
-               if (char === ' ') {
-                  i += 1;
-                  continue;
-               }
-
-               if ('+-*/()%√^'.includes(char)) {
-                  tokens.push({ type: 'operator', value: char });
-                  i += 1;
-                  continue;
-               }
-
-               if (char === 'π') {
-                  tokens.push({ type: 'number', value: Math.PI, constant: 'π' });
-                  i += 1;
-                  continue;
-               }
-
-               if (/\d|\./.test(char)) {
-                  let number = '';
-                  let dots = 0;
-
-                  while (i < normalized.length && /\d|\./.test(normalized[i])) {
-                     if (normalized[i] === '.') dots += 1;
-                     number += normalized[i];
-                     i += 1;
-                  }
-
-                  if (dots > 1 || number === '.') {
-                     throw new Error('Malformed number');
-                  }
-
-                  const value = parseFloat(number);
-                  if (!Number.isFinite(value)) {
-                     throw new Error('Number is too large');
-                  }
-
-                  tokens.push({ type: 'number', value, label: number });
-                  continue;
-               }
-
-               throw new Error(`Invalid character: ${char}`);
-            }
-
-            return tokens;
-         }
-
-         parse() {
-            if (this.tokens.length === 0) {
-               throw new Error('Enter an expression');
-            }
-            const node = this.parseExpression();
-            if (this.position < this.tokens.length) {
-               throw new Error('Malformed input');
-            }
-            return node;
-         }
-
-         parseExpression() {
-            let node = this.parseTerm();
-
-            while (this.match('+') || this.match('-')) {
-               const op = this.previous().value;
-               node = { type: 'binary', op, left: node, right: this.parseTerm() };
-            }
-
-            return node;
-         }
-
-         parseTerm() {
-            let node = this.parseUnary();
-
-            while (true) {
-               let op;
-               if (this.match('*') || this.match('/')) {
-                  op = this.previous().value;
-               } else if (this.startsImplicitFactor()) {
-                  // 2π, 2(3 + 4) and 2√9 mean multiplication.
-                  op = '*';
-               } else {
-                  break;
-               }
-               node = { type: 'binary', op, left: node, right: this.parseUnary() };
-            }
-
-            return node;
-         }
-
-         parseUnary() {
-            if (this.match('+')) return { type: 'unary', op: '+', operand: this.parseUnary() };
-            if (this.match('-')) return { type: 'unary', op: '-', operand: this.parseUnary() };
-            if (this.match('√')) return { type: 'sqrt', operand: this.parseUnary() };
-
-            return this.parsePower();
-         }
-
-         parsePower() {
-            const base = this.parsePostfix();
-
-            if (this.match('^')) {
-               // Right-associative: 2^3^2 is 2^(3^2).
-               return { type: 'binary', op: '^', left: base, right: this.parseUnary() };
-            }
-
-            return base;
-         }
-
-         parsePostfix() {
-            let node = this.parsePrimary();
-
-            while (this.match('%')) {
-               node = { type: 'percent', operand: node };
-            }
-
-            return node;
-         }
-
-         parsePrimary() {
-            if (this.matchType('number')) {
-               const token = this.previous();
-               return {
-                  type: 'number',
-                  value: token.value,
-                  label: token.constant || token.label,
-                  constant: token.constant
-               };
-            }
-
-            if (this.match('(')) {
-               const inner = this.parseExpression();
-               if (!this.match(')')) {
-                  throw new Error('Missing closing parenthesis');
-               }
-               return { type: 'group', inner };
-            }
-
-            throw new Error('Malformed input');
-         }
-
-         startsImplicitFactor() {
-            if (this.isAtEnd()) return false;
-            const token = this.tokens[this.position];
-            return Boolean(token.constant) || (token.type === 'operator' && (token.value === '(' || token.value === '√'));
-         }
-
-         match(expected) {
-            if (this.checkOperator(expected)) {
-               this.position += 1;
-               return true;
-            }
-            return false;
-         }
-
-         matchType(type) {
-            if (this.checkType(type)) {
-               this.position += 1;
-               return true;
-            }
-            return false;
-         }
-
-         checkOperator(expected) {
-            if (this.isAtEnd()) return false;
-            const token = this.tokens[this.position];
-            return token.type === 'operator' && token.value === expected;
-         }
-
-         checkType(type) {
-            if (this.isAtEnd()) return false;
-            return this.tokens[this.position].type === type;
-         }
-
-         previous() {
-            return this.tokens[this.position - 1];
-         }
-
-         isAtEnd() {
-            return this.position >= this.tokens.length;
-         }
-      }
-
-      // ---------- Step-by-step evaluation ----------
-
-      function isPlainNumber(node) {
-         return node.type === 'number' && !node.constant;
-      }
-
-      function childrenOf(node) {
-         if (node.type === 'binary') return [node.left, node.right];
-         if (node.type === 'group') return [node.inner];
-         if (node.operand) return [node.operand];
-         return [];
-      }
-
-      // The leftmost, innermost operation whose inputs are already plain numbers.
-      function findNextReducible(node) {
-         for (const child of childrenOf(node)) {
-            const found = findNextReducible(child);
-            if (found) return found;
-         }
-         return isPlainNumber(node) ? null : node;
-      }
-
-      function computeReduction(node) {
-         if (node.type === 'number') {
-            return { value: node.value, approximate: true };
-         }
-
-         if (node.type === 'group') {
-            return { value: node.inner.value, silent: true };
-         }
-
-         if (node.type === 'unary') {
-            const value = node.op === '-' ? -node.operand.value : node.operand.value;
-            return { value, silent: true };
-         }
-
-         if (node.type === 'sqrt') {
-            if (node.operand.value < 0) throw new Error('Square root of negative number');
-            return { value: Math.sqrt(node.operand.value) };
-         }
-
-         if (node.type === 'percent') {
-            return { value: node.operand.value / 100 };
-         }
-
-         const left = node.left.value;
-         const right = node.right.value;
-
-         switch (node.op) {
-            case '+': return { value: left + right };
-            case '-': return { value: left - right };
-            case '*': return { value: left * right };
-            case '/':
-               if (right === 0) throw new Error('Division by zero');
-               return { value: left / right };
-            case '^': {
-               const value = Math.pow(left, right);
-               if (Number.isNaN(value)) throw new Error('Result is not a real number');
-               return { value };
-            }
-            default:
-               throw new Error('Malformed input');
-         }
-      }
-
-      function renderNode(node, target, context = 'top') {
-         let text;
-
-         switch (node.type) {
-            case 'number': {
-               const negative = node.value < 0 && !node.constant;
-               text = negative ? `−${node.label.replace(/^-/, '')}` : node.label;
-               if (negative && context !== 'top' && context !== 'left') {
-                  text = `(${text})`;
-               }
-               break;
-            }
-            case 'binary': {
-               const leftContext = node.op === '^' ? 'operand' : 'left';
-               const left = renderNode(node.left, target, leftContext);
-               const right = renderNode(node.right, target, 'operand');
-               text = node.op === '^'
-                  ? `${left}^${right}`
-                  : `${left} ${OPERATOR_SYMBOLS[node.op]} ${right}`;
-               break;
-            }
-            case 'unary':
-               text = `${OPERATOR_SYMBOLS[node.op]}${renderNode(node.operand, target, 'operand')}`;
-               break;
-            case 'sqrt':
-               text = `√${renderNode(node.operand, target, 'operand')}`;
-               break;
-            case 'percent':
-               text = `${renderNode(node.operand, target, 'operand')}%`;
-               break;
-            case 'group':
-               text = `(${renderNode(node.inner, target, 'top')})`;
-               break;
-            default:
-               text = '';
-         }
-
-         return node === target ? `${MARK_START}${text}${MARK_END}` : text;
-      }
-
-      // Parses the expression (throwing on syntax errors) and reduces it one
-      // operation at a time. Math errors such as division by zero are returned
-      // with the steps that came before them.
-      function solve(expression) {
-         const root = new ExpressionParser(expression).parse();
-         const start = renderNode(root, null);
-         const steps = [];
-
-         let node = findNextReducible(root);
-         while (node) {
-            const before = renderNode(root, node);
-            const operation = renderNode(node, null);
-            let reduction;
-
-            try {
-               reduction = computeReduction(node);
-            } catch (error) {
-               return { start, steps, error, failedAt: before };
-            }
-
-            if (!Number.isFinite(reduction.value)) {
-               return { start, steps, error: new Error('Result is not finite'), failedAt: before };
-            }
-
-            const label = formatNumber(reduction.value);
-            Object.keys(node).forEach((key) => delete node[key]);
-            Object.assign(node, { type: 'number', value: reduction.value, label });
-
-            if (!reduction.silent) {
-               const sign = reduction.approximate ? '≈' : '=';
-               steps.push({ before, detail: `${operation} ${sign} ${label}` });
-            }
-
-            node = findNextReducible(root);
-         }
-
-         return { start, steps, result: root.value };
-      }
-
-      // ---------- Show-your-work panel ----------
-
-      function appendMarkedText(parent, text) {
-         const [before, marked, after] = text.split(new RegExp(`[${MARK_START}${MARK_END}]`));
-         parent.append(before);
-         if (marked !== undefined) {
-            const mark = document.createElement('mark');
-            mark.textContent = marked;
-            parent.append(mark, after);
-         }
-      }
-
-      function addWorkRow(className, build) {
-         const item = document.createElement('li');
-         item.className = className;
-         build(item);
-         workSteps.appendChild(item);
-      }
-
-      function showWorkMessage(message) {
-         addWorkRow('work-message', (item) => {
-            item.textContent = message;
-         });
-      }
-
-      function renderWork(expression, { final = false } = {}) {
-         workSteps.replaceChildren();
-
-         if (!expression.trim()) {
-            showWorkMessage('Type an expression and each step will appear here.');
-            return;
-         }
-
-         let solution;
-         try {
-            solution = solve(expression);
-         } catch (error) {
-            showWorkMessage(final ? `Can't read this yet: ${error.message}.` : 'Keep typing…');
-            return;
-         }
-
-         solution.steps.forEach((step, index) => {
-            addWorkRow('work-step', (item) => {
-               const number = document.createElement('span');
-               number.className = 'work-number';
-               number.textContent = index + 1;
-               number.setAttribute('aria-hidden', 'true');
-
-               const expressionLine = document.createElement('span');
-               expressionLine.className = 'work-expression';
-               appendMarkedText(expressionLine, step.before);
-
-               const detail = document.createElement('span');
-               detail.className = 'work-detail';
-               detail.textContent = step.detail;
-
-               item.append(number, expressionLine, detail);
-            });
-         });
-
-         if (solution.error) {
-            addWorkRow('work-error', (item) => {
-               const expressionLine = document.createElement('span');
-               expressionLine.className = 'work-expression';
-               appendMarkedText(expressionLine, solution.failedAt);
-
-               const detail = document.createElement('span');
-               detail.className = 'work-detail';
-               detail.textContent = `Stopped: ${solution.error.message}`;
-
-               item.append(expressionLine, detail);
-            });
-            return;
-         }
-
-         if (solution.steps.length === 0) {
-            showWorkMessage('Nothing to simplify yet.');
-            return;
-         }
-
-         addWorkRow('work-answer', (item) => {
-            item.textContent = `Answer: ${formatNumber(solution.result)}`;
-         });
-      }
-
-      // ---------- Start-up ----------
-
-      applyTheme(document.documentElement.dataset.theme);
-      applyShowWork(readStorage(STORAGE_KEYS.showWork) !== 'false');
-      renderHistory();
-      renderWork('');
-   </script>
+   <script src="js/parser.js"></script>
+   <script src="js/graph.js"></script>
+   <script src="js/converter.js"></script>
+   <script src="js/app.js"></script>
 </body>
 </html>
