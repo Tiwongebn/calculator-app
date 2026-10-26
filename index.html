@@ -476,7 +476,12 @@
                      throw new Error('Malformed number');
                   }
 
-                  tokens.push({ type: 'number', value: parseFloat(number), label: number });
+                  const value = parseFloat(number);
+                  if (!Number.isFinite(value)) {
+                     throw new Error('Number is too large');
+                  }
+
+                  tokens.push({ type: 'number', value, label: number });
                   continue;
                }
 
