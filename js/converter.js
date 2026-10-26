@@ -249,8 +249,13 @@ const converter = (() => {
    function readAmount() {
       const text = amountInput.value.trim();
       if (!text) return null;
-      // The amount box accepts expressions too, so "12 * 3" works.
-      return evaluateTree(parseExpression(text));
+      // The amount box accepts expressions too, so "12 * 3" works. Angles
+      // follow the calculator's DEG/RAD setting.
+      let angleMode = 'deg';
+      try {
+         if (localStorage.getItem('calc-angle-mode') === 'rad') angleMode = 'rad';
+      } catch (error) {}
+      return evaluateTree(parseExpression(text), { angleMode });
    }
 
    function update() {
