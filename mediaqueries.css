@@ -1,151 +1,69 @@
-@media (min-width: 1440px) {
-    .container {
-        padding: 32px;
-    }
-
-    .calculator-layout {
-        gap: 28px;
-    }
-
-    .calculator {
-        padding: 30px;
-    }
-
-    .calculator form .calc-button {
-        width: 68px;
-        height: 68px;
-        margin: 11px;
-        font-size: 22px;
-    }
-
-     form .display .display-input {
-        font-size: 50px;
-    }
-
-    .side-panels {
-        width: 320px;
-    }
-
-    .calculator form {
-        max-width: 384px;
-    }
-
-    .view {
-        width: 384px;
-    }
-}
-
-@media (max-width: 1024px) {
-    .container {
-        padding: 18px;
-    }
-
-    .calculator-layout {
-        gap: 16px;
-    }
-
-    .calculator {
-        padding: 20px;
-    }
-
-     .calculator form .calc-button {
-        width: 56px;
-        height: 56px;
-        margin: 8px;
-    }
-
-     form .display .display-input {
-        font-size: 40px;
-    }
-
-    .side-panels {
-        width: 250px;
-    }
-}
-
+/* Tablets and phones: the side panels move below the calculator, which
+   still fills exactly one screen so every key is reachable without scrolling. */
 @media (max-width: 860px) {
-    .container {
-        padding: 16px;
-    }
-
     .calculator-layout {
         flex-direction: column;
         align-items: center;
         width: 100%;
     }
 
-     .calculator {
-        width: fit-content;
-        max-width: 100%;
-        margin: 0 auto;
-    }
-
-    form .display {
-        /* Maintain the alignment with buttons */
-        margin: 15px 8px; 
-    }
-
     .side-panels {
-        width: min(100%, 480px);
+        width: min(380px, 100%);
+        height: auto;
+        min-height: 0;
     }
 
-     .calculator form .calc-button {
-        width: 56px;
-        height: 56px;
-        margin: 8px;
+    .history-panel,
+    .work-panel:not([hidden]) + .history-panel {
+        max-height: none;
+        flex-basis: auto;
     }
 
-    .panel {
-        padding: 18px;
+    .work-steps {
+        max-height: 320px;
     }
 }
 
-
 @media (max-width: 520px) {
-    .container {
-        padding: 12px;
+    :root {
+        --pad: 12px;
     }
 
     .calculator {
         width: 100%;
-        max-width: 360px;
-        margin: 0 auto;
         padding: 14px;
+        border-radius: 24px;
     }
 
-     .calculator form .calc-button {
-        width: calc((100vw - 80px) / 4);
-        max-width: 56px;
-        min-width: 48px;
-        height: calc((100vw - 80px) / 4);
-        max-height: 56px;
-        min-height: 44px;
-        margin: 6px;
-        border-radius: 12px;
-        font-size: 18px;
+    .keypad {
+        gap: 8px;
     }
 
-    form .display {
-        margin: 12px 6px;
+    .mode-tab {
+        padding: 6px 11px;
+    }
+}
+
+/* Short screens such as landscape phones: tighten the spacing. */
+@media (max-height: 640px) {
+    .calculator {
+        gap: 10px;
+        padding: 12px;
     }
 
-     form .display .display-input {
-        width: 100%;
-        font-size: 34px;
-        padding: 10px 12px;
+    #calculator-form,
+    .view {
+        gap: 8px;
     }
 
-    .side-panels {
-        width: 100%;
-        gap: 16px;
+    .keypad {
+        gap: 6px;
+        grid-template-rows: repeat(6, minmax(30px, 1fr));
     }
 
-    .panel {
-        padding: 14px;
-    }
-
-    .toolbar {
-        margin: 0 6px;
+    .display {
+        flex-basis: 56px;
+        min-height: 56px;
     }
 }
 
@@ -153,14 +71,21 @@
     .container::before,
     .container::after,
     .view,
-    .calculator form .calc-button.pressed,
+    .calc-button.pressed,
     .work-steps.animate-steps .work-step,
     .work-steps.animate-steps .work-answer,
     .convert-result.result-pop {
-        animation: none; /* Stops the movement but keeps the static beauty */
+        animation: none;
     }
 
     .scientific-panel {
         transition: none;
+    }
+}
+
+/* Very short screens can't fit every row; let the card scroll inside itself. */
+@media (max-height: 500px) {
+    .calculator {
+        overflow-y: auto;
     }
 }
