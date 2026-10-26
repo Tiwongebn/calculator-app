@@ -1,24 +1,86 @@
 *{
     margin: 0;
     padding: 0;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
     box-sizing: border-box;
 }
 
 :root {
+    color-scheme: dark;
+    --page-bg: #071325;
+    --glow-opacity: 0.85;
     --glass-bg: rgba(23, 27, 40, 0.45);
     --glass-border: rgba(255, 255, 255, 0.18);
+    --panel-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
     --text-main: #ecf4ff;
     --text-subtle: #b7f3ff;
+    --text-muted: rgba(236, 244, 255, 0.7);
     --btn-bg: rgba(255, 255, 255, 0.08);
+    --btn-bg-hover: rgba(255, 255, 255, 0.12);
     --btn-bg-press: rgba(255, 255, 255, 0.16);
+    --btn-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+    --display-bg: rgba(4, 11, 24, 0.45);
+    --item-bg: rgba(255, 255, 255, 0.08);
+    --item-border: rgba(255, 255, 255, 0.14);
+    --accent: #4fd1ff;
+    --accent-strong: linear-gradient(135deg, #4fd1ff, #8b5cf6);
+    --accent-text: #061223;
+    --mark-bg: rgba(79, 209, 255, 0.24);
+    --error: #ff8a9a;
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+    --page-bg: #eef3fb;
+    --glow-opacity: 0.45;
+    --glass-bg: rgba(255, 255, 255, 0.55);
+    --glass-border: rgba(15, 27, 45, 0.12);
+    --panel-shadow: 0 18px 40px rgba(30, 50, 90, 0.16);
+    --text-main: #0f1b2d;
+    --text-subtle: #1d4ed8;
+    --text-muted: rgba(15, 27, 45, 0.65);
+    --btn-bg: rgba(255, 255, 255, 0.65);
+    --btn-bg-hover: rgba(255, 255, 255, 0.85);
+    --btn-bg-press: rgba(255, 255, 255, 1);
+    --btn-shadow: 0 6px 14px rgba(30, 50, 90, 0.12);
+    --display-bg: rgba(255, 255, 255, 0.7);
+    --item-bg: rgba(255, 255, 255, 0.6);
+    --item-border: rgba(15, 27, 45, 0.1);
+    --accent: #2563eb;
+    --accent-strong: linear-gradient(135deg, #2563eb, #7c3aed);
+    --accent-text: #ffffff;
+    --mark-bg: rgba(37, 99, 235, 0.16);
+    --error: #c2253f;
 }
 
 body {
     min-height: 100vh;
     overflow-y: scroll;
     overflow-x: hidden;
-    background: #071325;
+    background: var(--page-bg);
+    color: var(--text-main);
+    transition: background-color 200ms ease;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
 }
 
 .container{
@@ -27,8 +89,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-     position: relative;
+    position: relative;
     isolation: isolate;
+    overflow: hidden;
     padding: 20px;
 }
 
@@ -39,32 +102,32 @@ body {
     inset: -25% -10%;
     z-index: -2;
     filter: blur(70px);
-    opacity: 0.85;
+    opacity: var(--glow-opacity);
     background: radial-gradient(circle at 20% 20%, #4fd1ff 0%, transparent 40%),
                 radial-gradient(circle at 80% 30%, #8b5cf6 0%, transparent 38%),
                 radial-gradient(circle at 60% 80%, #36f3a1 0%, transparent 40%);
-     transform: translate3d(0, 0, 0) scale(1.02);
+    transform: translate3d(0, 0, 0) scale(1.02);
 }
 
 .container::after {
     z-index: -1;
     filter: blur(60px);
-    opacity: 0.6;
+    opacity: calc(var(--glow-opacity) * 0.7);
     transform: translate3d(2%, -1%, 0) scale(1.04);
 }
 
 .calculator-layout {
     display: flex;
     gap: 20px;
-    align-items: stretch;
+    align-items: flex-start;
 }
 
 .calculator,
-.history-panel {
+.panel {
     background: var(--glass-bg);
     border-radius: 22px;
     border: 1px solid var(--glass-border);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    box-shadow: var(--panel-shadow);
     backdrop-filter: blur(16px) saturate(145%);
     -webkit-backdrop-filter: blur(16px) saturate(145%);
 }
@@ -73,8 +136,71 @@ body {
     padding: 24px;
 }
 
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin: 0 10px;
+}
+
+.toolbar-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 36px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--glass-border);
+    background: var(--btn-bg);
+    color: var(--text-main);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 140ms ease, border-color 140ms ease;
+}
+
+.toolbar-button:hover {
+    background: var(--btn-bg-hover);
+}
+
+.toolbar-button[aria-pressed="true"] {
+    border-color: var(--accent);
+    color: var(--text-subtle);
+}
+
+.toolbar-button[aria-pressed="true"]::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+}
+
+.icon-button {
+    width: 36px;
+    padding: 0;
+}
+
+.icon-button svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Show the sun in dark mode (switch to light) and the moon in light mode. */
+:root[data-theme="light"] .icon-sun,
+:root:not([data-theme="light"]) .icon-moon {
+    display: none;
+}
+
 .calculator form {
-    display: block; 
+    display: block;
     text-align: center;
     width: 100%;
     max-width: 340px;
@@ -83,11 +209,10 @@ body {
 
 .calculator form .calc-button{
     border: 0;
-    outline: 0;
     width: 60px;
     height: 60px;
     border-radius: 14px;
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+    box-shadow: var(--btn-shadow);
     background: var(--btn-bg);
     font-size: 20px;
     color: var(--text-main);
@@ -98,14 +223,26 @@ body {
 }
 
 .calculator form .calc-button:hover{
-    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.32);
-    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.2);
+    background: var(--btn-bg-hover);
 }
- 
+
 .calculator form .calc-button:active{
     transform: scale(0.92);
     background: var(--btn-bg-press);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+form .calc-button.operator{
+    color: var(--text-subtle);
+    font-weight: 600;
+}
+
+.calculator form .calc-button.equals,
+.calculator form .calc-button.equals:hover,
+.calculator form .calc-button.equals:active {
+    background: var(--accent-strong);
+    color: var(--accent-text);
+    font-weight: 600;
 }
 
 form .display{
@@ -118,15 +255,15 @@ form .display{
 form .display .display-input{
     width: 100%;
     min-width: 0;
-    box-sizing: border-box;
     display: block;
     text-align: right;
     flex: 1;
     font-size: 45px;
+    border: 1px solid transparent;
     box-shadow: none;
-     border-radius: 16px;
+    border-radius: 16px;
     padding: 10px 14px;
-    background: rgba(4, 11, 24, 0.45);
+    background: var(--display-bg);
     color: var(--text-main);
 }
 
@@ -140,6 +277,7 @@ form .display .display-input.pulse-evaluate {
 
 form .display .display-input.shake-error {
     animation: errorShake 220ms ease;
+    color: var(--error);
 }
 
 @keyframes valueSlide {
@@ -174,25 +312,48 @@ form .display .display-input.shake-error {
     75% { transform: translateX(6px); }
 }
 
-form .calc-button.operator{
-    color: var(--text-subtle);
-    font-weight: 600;
+.side-panels {
+    width: 290px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-.history-panel {
-    width: 250px;
+.panel {
     padding: 20px;
     color: var(--text-main);
     display: flex;
     flex-direction: column;
 }
 
-.history-panel h2 {
-    font-size: 0.90rem;
+.panel h2 {
+    font-size: 0.9rem;
+    font-weight: 600;
     margin-bottom: 12px;
     color: var(--text-subtle);
 }
 
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.text-button {
+    border: 0;
+    background: none;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 6px;
+}
+
+.text-button:hover {
+    color: var(--text-main);
+}
+
+.work-steps,
 .history-panel ul {
     list-style: none;
     display: flex;
@@ -200,16 +361,112 @@ form .calc-button.operator{
     gap: 10px;
 }
 
-.history-panel li {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.14);
+.work-steps {
+    max-height: 340px;
+    overflow-y: auto;
+}
+
+.work-step,
+.work-error {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 10px;
+    row-gap: 2px;
+    background: var(--item-bg);
+    border: 1px solid var(--item-border);
     border-radius: 12px;
     padding: 10px 12px;
+}
+
+.work-number {
+    grid-row: span 2;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: var(--mark-bg);
+    color: var(--text-subtle);
+}
+
+.work-expression {
     font-size: 0.95rem;
     word-break: break-word;
 }
 
+.work-expression mark {
+    background: var(--mark-bg);
+    color: inherit;
+    border-radius: 5px;
+    padding: 0 3px;
+    box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+.work-detail {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.work-error {
+    grid-template-columns: 1fr;
+    border-color: var(--error);
+}
+
+.work-error .work-detail {
+    color: var(--error);
+}
+
+.work-answer {
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: var(--accent-strong);
+    color: var(--accent-text);
+    font-weight: 600;
+    word-break: break-word;
+}
+
+.work-message,
 .history-panel .history-empty {
-    opacity: 0.75;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.history-panel .history-empty {
     text-align: center;
+}
+
+.history-item {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    text-align: left;
+    background: var(--item-bg);
+    border: 1px solid var(--item-border);
+    border-radius: 12px;
+    padding: 10px 12px;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: border-color 140ms ease, background-color 140ms ease;
+}
+
+.history-item:hover {
+    border-color: var(--accent);
+    background: var(--btn-bg-hover);
+}
+
+.history-expression {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    word-break: break-word;
+}
+
+.history-result {
+    font-size: 0.95rem;
+    font-weight: 500;
+    word-break: break-word;
 }
