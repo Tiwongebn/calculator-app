@@ -22,8 +22,8 @@
         font-size: 50px;
     }
 
-    .history-panel {
-        width: 290px;
+    .side-panels {
+        width: 320px;
     }
 }
 
@@ -50,8 +50,8 @@
         font-size: 40px;
     }
 
-    .history-panel {
-        width: 230px;
+    .side-panels {
+        width: 250px;
     }
 }
 
@@ -77,7 +77,7 @@
         margin: 15px 8px; 
     }
 
-    .history-panel {
+    .side-panels {
         width: min(100%, 480px);
     }
 
@@ -87,8 +87,8 @@
         margin: 8px;
     }
 
-    .history-panel { 
-        padding: 18px; 
+    .panel {
+        padding: 18px;
     }
 }
 
@@ -127,14 +127,17 @@
         padding: 10px 12px;
     }
 
-    .history-panel {
+    .side-panels {
         width: 100%;
+        gap: 16px;
+    }
+
+    .panel {
         padding: 14px;
     }
 
-    .history-panel li {
-        font-size: 0.9rem;
-        padding: 9px 10px;
+    .toolbar {
+        margin: 0 6px;
     }
 }
 

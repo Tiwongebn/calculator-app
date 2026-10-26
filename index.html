@@ -1,70 +1,165 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+   <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Calculator using javascript - Easy Tutorials</title>
+   <title>Show Your Work Calculator</title>
+   <meta name="description" content="A calculator that explains every step of its answer, powered by a hand-written expression parser instead of eval().">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap">
+   <script>
+      // Apply the saved (or system) theme before the page paints to avoid a flash.
+      (function () {
+         let theme = null;
+         try {
+            theme = localStorage.getItem('calc-theme');
+         } catch (error) {}
+         if (theme !== 'light' && theme !== 'dark') {
+            theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+         }
+         document.documentElement.dataset.theme = theme;
+      })();
+   </script>
    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="mediaqueries.css">
+   <link rel="stylesheet" href="mediaqueries.css">
 </head>
 <body>
 
    <div class="container">
-   <div class="calculator-layout">
-         <div class="calculator">
+      <main class="calculator-layout">
+         <section class="calculator" aria-label="Calculator">
+            <div class="toolbar">
+               <button type="button" id="work-toggle" class="toolbar-button" aria-pressed="true" aria-controls="work-panel">
+                  Show work
+               </button>
+               <button type="button" id="theme-toggle" class="toolbar-button icon-button" aria-label="Switch to light theme">
+                  <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                     <circle cx="12" cy="12" r="4.5"></circle>
+                     <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"></path>
+                  </svg>
+                  <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                     <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"></path>
+                  </svg>
+               </button>
+            </div>
+
             <form id="calculator-form" onsubmit="return false;">
                <div class="display">
-                 <input type="text" name="display" id="display" class="display-input" readonly>
+                  <label for="display" class="visually-hidden">Expression</label>
+                  <input type="text" name="display" id="display" class="display-input" readonly>
                </div>
 
                <div>
-                   <input type="button" class="calc-button operator" value="AC" data-action="clear">
-                  <input type="button" class="calc-button operator" value="DE" data-action="delete">
-                  <input type="button" class="calc-button operator" value="%" data-value="%">
-                  <input type="button" class="calc-button operator" value="/" data-value="/">
+                  <input type="button" class="calc-button operator" value="AC" data-action="clear" aria-label="Clear all">
+                  <input type="button" class="calc-button operator" value="DE" data-action="delete" aria-label="Delete last character">
+                  <input type="button" class="calc-button operator" value="(" data-value="(" aria-label="Open parenthesis">
+                  <input type="button" class="calc-button operator" value=")" data-value=")" aria-label="Close parenthesis">
+               </div>
+               <div>
+                  <input type="button" class="calc-button operator" value="√" data-action="sqrt" aria-label="Square root">
+                  <input type="button" class="calc-button operator" value="^" data-value="^" aria-label="Power">
+                  <input type="button" class="calc-button operator" value="%" data-value="%" aria-label="Percent">
+                  <input type="button" class="calc-button operator" value="÷" data-value="/" aria-label="Divide">
                </div>
                <div>
                   <input type="button" class="calc-button" value="7" data-value="7">
                   <input type="button" class="calc-button" value="8" data-value="8">
                   <input type="button" class="calc-button" value="9" data-value="9">
-                  <input type="button" class="calc-button operator" value="*" data-value="*">
+                  <input type="button" class="calc-button operator" value="×" data-value="*" aria-label="Multiply">
                </div>
                <div>
                   <input type="button" class="calc-button" value="4" data-value="4">
                   <input type="button" class="calc-button" value="5" data-value="5">
                   <input type="button" class="calc-button" value="6" data-value="6">
-                  <input type="button" class="calc-button operator" value="-" data-value="-">
+                  <input type="button" class="calc-button operator" value="−" data-value="-" aria-label="Subtract">
                </div>
                <div>
-                   <input type="button" class="calc-button" value="1" data-value="1">
+                  <input type="button" class="calc-button" value="1" data-value="1">
                   <input type="button" class="calc-button" value="2" data-value="2">
                   <input type="button" class="calc-button" value="3" data-value="3">
-                  <input type="button" class="calc-button operator" value="+" data-value="+">
+                  <input type="button" class="calc-button operator" value="+" data-value="+" aria-label="Add">
                </div>
                <div>
-                   <input type="button" class="calc-button operator" value="√" data-action="sqrt">
+                  <input type="button" class="calc-button operator" value="π" data-value="π" aria-label="Pi">
                   <input type="button" class="calc-button" value="0" data-value="0">
-                  <input type="button" class="calc-button operator" value="." data-value=".">
-                  <input type="button" class="calc-button operator" value="=" data-action="evaluate">
+                  <input type="button" class="calc-button operator" value="." data-value="." aria-label="Decimal point">
+                  <input type="button" class="calc-button equals" value="=" data-action="evaluate" aria-label="Equals">
                </div>
             </form>
-         </div>
 
-         <aside class="history-panel" aria-live="polite">
-            <h2>History</h2>
-            <ul id="history-list">
-               <li class="history-empty">No calculations yet</li>
-            </ul>
-         </aside>
-      </div>
+            <div id="announcer" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+         </section>
+
+         <div class="side-panels">
+            <section class="panel work-panel" id="work-panel" aria-labelledby="work-heading">
+               <h2 id="work-heading">Show your work</h2>
+               <ol id="work-steps" class="work-steps"></ol>
+            </section>
+
+            <section class="panel history-panel" aria-labelledby="history-heading">
+               <div class="panel-header">
+                  <h2 id="history-heading">History</h2>
+                  <button type="button" id="history-clear" class="text-button" hidden>Clear</button>
+               </div>
+               <ul id="history-list"></ul>
+            </section>
+         </div>
+      </main>
    </div>
+
    <script>
+      const STORAGE_KEYS = {
+         theme: 'calc-theme',
+         showWork: 'calc-show-work',
+         history: 'calc-history'
+      };
+      const HISTORY_LIMIT = 8;
+      const OPERATOR_SYMBOLS = { '+': '+', '-': '−', '*': '×', '/': '÷', '^': '^' };
+      const MARK_START = '\u0001';
+      const MARK_END = '\u0002';
+
       const form = document.getElementById('calculator-form');
       const display = document.getElementById('display');
+      const announcer = document.getElementById('announcer');
       const historyList = document.getElementById('history-list');
-      const history = [];
+      const historyClear = document.getElementById('history-clear');
+      const workPanel = document.getElementById('work-panel');
+      const workSteps = document.getElementById('work-steps');
+      const workToggle = document.getElementById('work-toggle');
+      const themeToggle = document.getElementById('theme-toggle');
 
-        function setDisplayValue(value, animate = true) {
+      let history = loadHistory();
+      // True while the display shows an error message, so the next key starts fresh.
+      let displayIsError = false;
+      // True right after "=", so typing a number starts a new calculation.
+      let justEvaluated = false;
+
+      function readStorage(key) {
+         try {
+            return localStorage.getItem(key);
+         } catch (error) {
+            return null;
+         }
+      }
+
+      function writeStorage(key, value) {
+         try {
+            localStorage.setItem(key, value);
+         } catch (error) {}
+      }
+
+      function announce(message) {
+         announcer.textContent = message;
+      }
+
+      function formatNumber(value) {
+         return String(Number(value.toPrecision(12)));
+      }
+
+      function setDisplayValue(value, animate = true) {
          display.value = value;
+         display.scrollLeft = display.scrollWidth;
          if (!animate) return;
 
          display.classList.remove('slide-in', 'pulse-evaluate', 'shake-error');
@@ -73,19 +168,60 @@
       }
 
       function appendToDisplay(value) {
+         const startsNewValue = /^[\d.π√(]/.test(value);
+         if (displayIsError || (justEvaluated && startsNewValue)) {
+            display.value = '';
+         }
+         displayIsError = false;
+         justEvaluated = false;
+
          setDisplayValue(display.value + value);
+         renderWork(display.value);
       }
 
-        function addHistoryEntry(expression, result) {
-         history.unshift(`${expression} = ${result}`);
-         if (history.length > 5) {
-            history.length = 5;
+      function clearDisplay() {
+         displayIsError = false;
+         justEvaluated = false;
+         setDisplayValue('');
+         renderWork('');
+      }
+
+      function deleteLastCharacter() {
+         if (displayIsError) {
+            clearDisplay();
+            return;
          }
+         justEvaluated = false;
+         setDisplayValue(display.value.slice(0, -1));
+         renderWork(display.value);
+      }
+
+      // ---------- History ----------
+
+      function loadHistory() {
+         try {
+            const saved = JSON.parse(readStorage(STORAGE_KEYS.history));
+            if (Array.isArray(saved)) {
+               return saved
+                  .filter((entry) => entry && typeof entry.expression === 'string' && typeof entry.result === 'string')
+                  .slice(0, HISTORY_LIMIT);
+            }
+         } catch (error) {}
+         return [];
+      }
+
+      function addHistoryEntry(expression, result) {
+         history.unshift({ expression, result });
+         if (history.length > HISTORY_LIMIT) {
+            history.length = HISTORY_LIMIT;
+         }
+         writeStorage(STORAGE_KEYS.history, JSON.stringify(history));
          renderHistory();
       }
 
-        function renderHistory() {
-         historyList.innerHTML = '';
+      function renderHistory() {
+         historyList.replaceChildren();
+         historyClear.hidden = history.length === 0;
 
          if (history.length === 0) {
             const emptyItem = document.createElement('li');
@@ -95,28 +231,78 @@
             return;
          }
 
-            history.forEach((entry) => {
+         history.forEach((entry) => {
             const item = document.createElement('li');
-            item.textContent = entry;
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'history-item';
+            button.setAttribute('aria-label', `Use result ${entry.result} from ${entry.expression}`);
+
+            const expression = document.createElement('span');
+            expression.className = 'history-expression';
+            expression.textContent = entry.expression;
+
+            const result = document.createElement('span');
+            result.className = 'history-result';
+            result.textContent = `= ${entry.result}`;
+
+            button.append(expression, result);
+            button.addEventListener('click', () => {
+               displayIsError = false;
+               justEvaluated = true;
+               setDisplayValue(entry.result);
+               renderWork(entry.expression, { final: true });
+               announce(`Loaded ${entry.result}`);
+            });
+
+            item.appendChild(button);
             historyList.appendChild(item);
          });
       }
 
-      function triggerDisplayAnimation(className) {
-         display.classList.remove(className);
-         void display.offsetWidth;
-         display.classList.add(className);
+      historyClear.addEventListener('click', () => {
+         history = [];
+         writeStorage(STORAGE_KEYS.history, JSON.stringify(history));
+         renderHistory();
+         announce('History cleared');
+      });
+
+      // ---------- Theme and show-work toggles ----------
+
+      function applyTheme(theme) {
+         document.documentElement.dataset.theme = theme;
+         const next = theme === 'dark' ? 'light' : 'dark';
+         themeToggle.setAttribute('aria-label', `Switch to ${next} theme`);
+         themeToggle.title = `Switch to ${next} theme`;
       }
 
-      function handleAction(action) {
+      themeToggle.addEventListener('click', () => {
+         const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+         applyTheme(theme);
+         writeStorage(STORAGE_KEYS.theme, theme);
+      });
 
+      function applyShowWork(enabled) {
+         workPanel.hidden = !enabled;
+         workToggle.setAttribute('aria-pressed', String(enabled));
+      }
+
+      workToggle.addEventListener('click', () => {
+         const enabled = workPanel.hidden;
+         applyShowWork(enabled);
+         writeStorage(STORAGE_KEYS.showWork, String(enabled));
+      });
+
+      // ---------- Input ----------
+
+      function handleAction(action) {
          if (action === 'clear') {
-            setDisplayValue('');
+            clearDisplay();
             return;
          }
 
          if (action === 'delete') {
-            setDisplayValue(display.value.slice(0, -1));
+            deleteLastCharacter();
             return;
          }
 
@@ -127,8 +313,15 @@
 
          if (action === 'evaluate') {
             evaluateExpression();
-              }
+         }
       }
+
+      // Keep mouse clicks from focusing keypad buttons, so Enter always means "=".
+      form.addEventListener('mousedown', (event) => {
+         if (event.target.classList.contains('calc-button')) {
+            event.preventDefault();
+         }
+      });
 
       form.addEventListener('click', (event) => {
          const target = event.target;
@@ -143,19 +336,26 @@
          }
 
          if (value) {
-           appendToDisplay(value);
-             }
+            appendToDisplay(value);
+         }
       });
 
       document.addEventListener('keydown', (event) => {
          const { key } = event;
+
+         if (event.ctrlKey || event.metaKey || event.altKey) return;
+
+         // Let Enter and Space activate whichever button has keyboard focus.
+         const focusedButton = event.target.closest && event.target.closest('button, input[type="button"]');
+         if (focusedButton && (key === 'Enter' || key === ' ')) return;
 
          if (/^[0-9]$/.test(key)) {
             appendToDisplay(key);
             return;
          }
 
-         if (['+', '-', '*', '/', '.', '%', '(', ')'].includes(key)) {
+         if (['+', '-', '*', '/', '.', '%', '(', ')', '^'].includes(key)) {
+            event.preventDefault();
             appendToDisplay(key);
             return;
          }
@@ -168,64 +368,96 @@
 
          if (key === 'Backspace') {
             event.preventDefault();
-            handleAction('delete');
+            deleteLastCharacter();
             return;
          }
 
          if (key === 'Escape') {
-            handleAction('clear');
+            clearDisplay();
             return;
          }
 
          if (key.toLowerCase() === 'r') {
             appendToDisplay('√(');
+            return;
+         }
+
+         if (key.toLowerCase() === 'p') {
+            appendToDisplay('π');
          }
       });
 
+      function triggerDisplayAnimation(className) {
+         display.classList.remove(className);
+         void display.offsetWidth;
+         display.classList.add(className);
+      }
+
       function evaluateExpression() {
+         if (displayIsError) return;
+
+         const expression = display.value.trim();
+
          try {
-            const expression = display.value.trim();
             if (!expression) {
                throw new Error('Enter an expression');
             }
-            const parser = new ExpressionParser(expression);
-            const result = parser.parse();
 
-            if (!Number.isFinite(result)) {
-               throw new Error('Result is not finite');
+            const solution = solve(expression);
+            if (solution.error) {
+               throw solution.error;
             }
 
-           const normalizedResult = String(Number(result.toFixed(10)));
-            setDisplayValue(normalizedResult, false);
+            const result = formatNumber(solution.result);
+            setDisplayValue(result, false);
             triggerDisplayAnimation('pulse-evaluate');
-            addHistoryEntry(expression, normalizedResult);
+            announce(`Equals ${result}`);
+
+            if (expression !== result) {
+               addHistoryEntry(expression, result);
+               renderWork(expression, { final: true });
+            }
+            justEvaluated = true;
          } catch (error) {
-             setDisplayValue(`Error: ${error.message}`, false);
+            setDisplayValue(`Error: ${error.message}`, false);
             triggerDisplayAnimation('shake-error');
+            announce(`Error: ${error.message}`);
+            renderWork(expression, { final: true });
+            displayIsError = true;
          }
       }
 
+      // ---------- Parsing ----------
+      // The parser builds a syntax tree instead of computing the answer directly,
+      // so the same tree can be reduced one operation at a time to show each step.
+
       class ExpressionParser {
          constructor(input) {
-            this.input = input;
             this.tokens = this.tokenize(input);
             this.position = 0;
          }
 
          tokenize(input) {
             const tokens = [];
+            const normalized = input.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-');
             let i = 0;
 
-            while (i < input.length) {
-               const char = input[i];
+            while (i < normalized.length) {
+               const char = normalized[i];
 
                if (char === ' ') {
                   i += 1;
                   continue;
                }
 
-               if ('+-*/()%√'.includes(char)) {
+               if ('+-*/()%√^'.includes(char)) {
                   tokens.push({ type: 'operator', value: char });
+                  i += 1;
+                  continue;
+               }
+
+               if (char === 'π') {
+                  tokens.push({ type: 'number', value: Math.PI, constant: 'π' });
                   i += 1;
                   continue;
                }
@@ -234,9 +466,9 @@
                   let number = '';
                   let dots = 0;
 
-                  while (i < input.length && /\d|\./.test(input[i])) {
-                     if (input[i] === '.') dots += 1;
-                     number += input[i];
+                  while (i < normalized.length && /\d|\./.test(normalized[i])) {
+                     if (normalized[i] === '.') dots += 1;
+                     number += normalized[i];
                      i += 1;
                   }
 
@@ -244,7 +476,7 @@
                      throw new Error('Malformed number');
                   }
 
-                  tokens.push({ type: 'number', value: parseFloat(number) });
+                  tokens.push({ type: 'number', value: parseFloat(number), label: number });
                   continue;
                }
 
@@ -255,78 +487,101 @@
          }
 
          parse() {
-            const value = this.parseExpression();
+            if (this.tokens.length === 0) {
+               throw new Error('Enter an expression');
+            }
+            const node = this.parseExpression();
             if (this.position < this.tokens.length) {
                throw new Error('Malformed input');
             }
-            return value;
+            return node;
          }
 
          parseExpression() {
-            let value = this.parseTerm();
+            let node = this.parseTerm();
 
             while (this.match('+') || this.match('-')) {
-               const operator = this.previous().value;
-               const right = this.parseTerm();
-               value = operator === '+' ? value + right : value - right;
+               const op = this.previous().value;
+               node = { type: 'binary', op, left: node, right: this.parseTerm() };
             }
 
-            return value;
+            return node;
          }
 
          parseTerm() {
-            let value = this.parseUnary();
+            let node = this.parseUnary();
 
-            while (this.match('*') || this.match('/')) {
-               const operator = this.previous().value;
-               const right = this.parseUnary();
-
-               if (operator === '/' && right === 0) {
-                  throw new Error('Division by zero');
+            while (true) {
+               let op;
+               if (this.match('*') || this.match('/')) {
+                  op = this.previous().value;
+               } else if (this.startsImplicitFactor()) {
+                  // 2π, 2(3 + 4) and 2√9 mean multiplication.
+                  op = '*';
+               } else {
+                  break;
                }
-
-               value = operator === '*' ? value * right : value / right;
+               node = { type: 'binary', op, left: node, right: this.parseUnary() };
             }
 
-            return value;
+            return node;
          }
 
          parseUnary() {
-            if (this.match('+')) return this.parseUnary();
-            if (this.match('-')) return -this.parseUnary();
-            if (this.match('√')) {
-               const value = this.parseUnary();
-               if (value < 0) throw new Error('Square root of negative number');
-               return Math.sqrt(value);
+            if (this.match('+')) return { type: 'unary', op: '+', operand: this.parseUnary() };
+            if (this.match('-')) return { type: 'unary', op: '-', operand: this.parseUnary() };
+            if (this.match('√')) return { type: 'sqrt', operand: this.parseUnary() };
+
+            return this.parsePower();
+         }
+
+         parsePower() {
+            const base = this.parsePostfix();
+
+            if (this.match('^')) {
+               // Right-associative: 2^3^2 is 2^(3^2).
+               return { type: 'binary', op: '^', left: base, right: this.parseUnary() };
             }
 
-            return this.parsePostfix();
+            return base;
          }
 
          parsePostfix() {
-            let value = this.parsePrimary();
+            let node = this.parsePrimary();
 
             while (this.match('%')) {
-               value /= 100;
+               node = { type: 'percent', operand: node };
             }
 
-            return value;
+            return node;
          }
 
          parsePrimary() {
             if (this.matchType('number')) {
-               return this.previous().value;
+               const token = this.previous();
+               return {
+                  type: 'number',
+                  value: token.value,
+                  label: token.constant || token.label,
+                  constant: token.constant
+               };
             }
 
             if (this.match('(')) {
-               const value = this.parseExpression();
+               const inner = this.parseExpression();
                if (!this.match(')')) {
                   throw new Error('Missing closing parenthesis');
                }
-               return value;
+               return { type: 'group', inner };
             }
 
             throw new Error('Malformed input');
+         }
+
+         startsImplicitFactor() {
+            if (this.isAtEnd()) return false;
+            const token = this.tokens[this.position];
+            return Boolean(token.constant) || (token.type === 'operator' && (token.value === '(' || token.value === '√'));
          }
 
          match(expected) {
@@ -364,6 +619,242 @@
             return this.position >= this.tokens.length;
          }
       }
+
+      // ---------- Step-by-step evaluation ----------
+
+      function isPlainNumber(node) {
+         return node.type === 'number' && !node.constant;
+      }
+
+      function childrenOf(node) {
+         if (node.type === 'binary') return [node.left, node.right];
+         if (node.type === 'group') return [node.inner];
+         if (node.operand) return [node.operand];
+         return [];
+      }
+
+      // The leftmost, innermost operation whose inputs are already plain numbers.
+      function findNextReducible(node) {
+         for (const child of childrenOf(node)) {
+            const found = findNextReducible(child);
+            if (found) return found;
+         }
+         return isPlainNumber(node) ? null : node;
+      }
+
+      function computeReduction(node) {
+         if (node.type === 'number') {
+            return { value: node.value, approximate: true };
+         }
+
+         if (node.type === 'group') {
+            return { value: node.inner.value, silent: true };
+         }
+
+         if (node.type === 'unary') {
+            const value = node.op === '-' ? -node.operand.value : node.operand.value;
+            return { value, silent: true };
+         }
+
+         if (node.type === 'sqrt') {
+            if (node.operand.value < 0) throw new Error('Square root of negative number');
+            return { value: Math.sqrt(node.operand.value) };
+         }
+
+         if (node.type === 'percent') {
+            return { value: node.operand.value / 100 };
+         }
+
+         const left = node.left.value;
+         const right = node.right.value;
+
+         switch (node.op) {
+            case '+': return { value: left + right };
+            case '-': return { value: left - right };
+            case '*': return { value: left * right };
+            case '/':
+               if (right === 0) throw new Error('Division by zero');
+               return { value: left / right };
+            case '^': {
+               const value = Math.pow(left, right);
+               if (Number.isNaN(value)) throw new Error('Result is not a real number');
+               return { value };
+            }
+            default:
+               throw new Error('Malformed input');
+         }
+      }
+
+      function renderNode(node, target, context = 'top') {
+         let text;
+
+         switch (node.type) {
+            case 'number': {
+               const negative = node.value < 0 && !node.constant;
+               text = negative ? `−${node.label.replace(/^-/, '')}` : node.label;
+               if (negative && context !== 'top' && context !== 'left') {
+                  text = `(${text})`;
+               }
+               break;
+            }
+            case 'binary': {
+               const leftContext = node.op === '^' ? 'operand' : 'left';
+               const left = renderNode(node.left, target, leftContext);
+               const right = renderNode(node.right, target, 'operand');
+               text = node.op === '^'
+                  ? `${left}^${right}`
+                  : `${left} ${OPERATOR_SYMBOLS[node.op]} ${right}`;
+               break;
+            }
+            case 'unary':
+               text = `${OPERATOR_SYMBOLS[node.op]}${renderNode(node.operand, target, 'operand')}`;
+               break;
+            case 'sqrt':
+               text = `√${renderNode(node.operand, target, 'operand')}`;
+               break;
+            case 'percent':
+               text = `${renderNode(node.operand, target, 'operand')}%`;
+               break;
+            case 'group':
+               text = `(${renderNode(node.inner, target, 'top')})`;
+               break;
+            default:
+               text = '';
+         }
+
+         return node === target ? `${MARK_START}${text}${MARK_END}` : text;
+      }
+
+      // Parses the expression (throwing on syntax errors) and reduces it one
+      // operation at a time. Math errors such as division by zero are returned
+      // with the steps that came before them.
+      function solve(expression) {
+         const root = new ExpressionParser(expression).parse();
+         const start = renderNode(root, null);
+         const steps = [];
+
+         let node = findNextReducible(root);
+         while (node) {
+            const before = renderNode(root, node);
+            const operation = renderNode(node, null);
+            let reduction;
+
+            try {
+               reduction = computeReduction(node);
+            } catch (error) {
+               return { start, steps, error, failedAt: before };
+            }
+
+            if (!Number.isFinite(reduction.value)) {
+               return { start, steps, error: new Error('Result is not finite'), failedAt: before };
+            }
+
+            const label = formatNumber(reduction.value);
+            Object.keys(node).forEach((key) => delete node[key]);
+            Object.assign(node, { type: 'number', value: reduction.value, label });
+
+            if (!reduction.silent) {
+               const sign = reduction.approximate ? '≈' : '=';
+               steps.push({ before, detail: `${operation} ${sign} ${label}` });
+            }
+
+            node = findNextReducible(root);
+         }
+
+         return { start, steps, result: root.value };
+      }
+
+      // ---------- Show-your-work panel ----------
+
+      function appendMarkedText(parent, text) {
+         const [before, marked, after] = text.split(new RegExp(`[${MARK_START}${MARK_END}]`));
+         parent.append(before);
+         if (marked !== undefined) {
+            const mark = document.createElement('mark');
+            mark.textContent = marked;
+            parent.append(mark, after);
+         }
+      }
+
+      function addWorkRow(className, build) {
+         const item = document.createElement('li');
+         item.className = className;
+         build(item);
+         workSteps.appendChild(item);
+      }
+
+      function showWorkMessage(message) {
+         addWorkRow('work-message', (item) => {
+            item.textContent = message;
+         });
+      }
+
+      function renderWork(expression, { final = false } = {}) {
+         workSteps.replaceChildren();
+
+         if (!expression.trim()) {
+            showWorkMessage('Type an expression and each step will appear here.');
+            return;
+         }
+
+         let solution;
+         try {
+            solution = solve(expression);
+         } catch (error) {
+            showWorkMessage(final ? `Can't read this yet: ${error.message}.` : 'Keep typing…');
+            return;
+         }
+
+         solution.steps.forEach((step, index) => {
+            addWorkRow('work-step', (item) => {
+               const number = document.createElement('span');
+               number.className = 'work-number';
+               number.textContent = index + 1;
+               number.setAttribute('aria-hidden', 'true');
+
+               const expressionLine = document.createElement('span');
+               expressionLine.className = 'work-expression';
+               appendMarkedText(expressionLine, step.before);
+
+               const detail = document.createElement('span');
+               detail.className = 'work-detail';
+               detail.textContent = step.detail;
+
+               item.append(number, expressionLine, detail);
+            });
+         });
+
+         if (solution.error) {
+            addWorkRow('work-error', (item) => {
+               const expressionLine = document.createElement('span');
+               expressionLine.className = 'work-expression';
+               appendMarkedText(expressionLine, solution.failedAt);
+
+               const detail = document.createElement('span');
+               detail.className = 'work-detail';
+               detail.textContent = `Stopped: ${solution.error.message}`;
+
+               item.append(expressionLine, detail);
+            });
+            return;
+         }
+
+         if (solution.steps.length === 0) {
+            showWorkMessage('Nothing to simplify yet.');
+            return;
+         }
+
+         addWorkRow('work-answer', (item) => {
+            item.textContent = `Answer: ${formatNumber(solution.result)}`;
+         });
+      }
+
+      // ---------- Start-up ----------
+
+      applyTheme(document.documentElement.dataset.theme);
+      applyShowWork(readStorage(STORAGE_KEYS.showWork) !== 'false');
+      renderHistory();
+      renderWork('');
    </script>
 </body>
 </html>
